@@ -99,6 +99,27 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void checkSearchFieldText() {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'SKIP')]"),
+                "couldn't find skipButton",
+                5
+                );
+        waitForElementAndClick(
+                By.xpath("//*[@text='Search Wikipedia']"),
+                "couldn't find searchButton",
+                5
+        );
+        assertElementHasText(
+                By.id("search_src_text"),
+                "Search Wikipedia",
+                "unexpected text in search field",
+                5
+        );
+
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
@@ -135,6 +156,11 @@ public class FirstTest {
         return wait.until(
                 ExpectedConditions.invisibilityOfElementLocated(by)
         );
+    }
+
+    private void assertElementHasText(By by, String expectedText, String errorMessage, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, "Element was not found" + "\n", timeoutInSeconds);
+        Assert.assertEquals(errorMessage, element.getText(), expectedText);
     }
 
 }
