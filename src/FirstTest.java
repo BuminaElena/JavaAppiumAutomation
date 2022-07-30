@@ -12,6 +12,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Locale;
 
 public class FirstTest {
 
@@ -100,7 +102,7 @@ public class FirstTest {
     }
 
     @Test
-    public void SearchFieldText() {
+    public void checkSearchFieldText() {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'SKIP')]"),
                 "couldn't find skipButton",
@@ -160,11 +162,54 @@ public class FirstTest {
 
     }
 
+    @Test
+    public void searchByWord() {
+        String search = "appium";
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'SKIP')]"),
+                "couldn't find skipButton",
+                5
+                );
+        waitForElementAndClick(
+                By.xpath("//*[@text='Search Wikipedia']"),
+                "couldn't find searchButton",
+                5
+        );
+        // вводим слово в поле поиска
+        waitForElementAndSendKeys(
+                By.className("android.widget.EditText"),
+                search,
+                "couldn't find searchField",
+                5
+        );
+        // получаем список результатов поиска
+        List<WebElement> result = waitForListOfElementsPresent(
+                By.id("page_list_item_title"),
+                "couldn't find result of search",
+                15
+        );
+        for (WebElement element : result) {
+            String elementText = element.getText().toLowerCase();
+            Assert.assertTrue(
+                    "Result doesn't contains " + search + ". Result is " + elementText,
+                    elementText.contains(search.toLowerCase())
+            );
+        }
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
         return wait.until(
                 ExpectedConditions.presenceOfElementLocated(by)
+        );
+    }
+
+    private List<WebElement> waitForListOfElementsPresent(By by, String errorMessage, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(errorMessage + "\n");
+        return wait.until(
+                ExpectedConditions.presenceOfAllElementsLocatedBy(by)
         );
     }
 
@@ -201,6 +246,10 @@ public class FirstTest {
     private void assertElementHasText(By by, String expectedText, String errorMessage, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, "Element was not found" + "\n", timeoutInSeconds);
         Assert.assertEquals(errorMessage, element.getText(), expectedText);
+    }
+
+    private void assertElementHasText(WebElement element, String expectedText) {
+        Assert.assertEquals(element.getText(), expectedText);
     }
 
 }
