@@ -100,7 +100,7 @@ public class FirstTest {
     }
 
     @Test
-    public void checkSearchFieldText() {
+    public void SearchFieldText() {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'SKIP')]"),
                 "couldn't find skipButton",
@@ -115,6 +115,46 @@ public class FirstTest {
                 By.id("search_src_text"),
                 "Search Wikipedia",
                 "unexpected text in search field",
+                5
+        );
+
+    }
+
+    @Test
+    public void cancelSearch() {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'SKIP')]"),
+                "couldn't find skipButton",
+                5
+                );
+        waitForElementAndClick(
+                By.xpath("//*[@text='Search Wikipedia']"),
+                "couldn't find searchButton",
+                5
+        );
+        // вводим слово в поле поиска
+        waitForElementAndSendKeys(
+                By.className("android.widget.EditText"),
+                "java",
+                "couldn't find searchField",
+                5
+        );
+        // ожидаем хотя бы один результат поиска
+        waitForElementPresent(
+                By.id("page_list_item_title"),
+                "couldn't find result of search",
+                15
+        );
+        // нажимаем крестик
+        waitForElementAndClick(
+                By.id("search_close_btn"),
+                "couldn't find closeButton",
+                5
+        );
+        // проверяем, что результат поиска не отображается
+        waitForElementNotPresent(
+                By.id("page_list_item_title"),
+                "result of search is present on page",
                 5
         );
 
