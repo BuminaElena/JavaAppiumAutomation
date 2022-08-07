@@ -438,6 +438,32 @@ public class FirstTest {
 
     }
 
+    @Test
+    public void checkArticleHasTitle() {
+        String search = "java",
+                articleName = "Java (programming language)";
+        waitForElementAndClick(
+                By.xpath("//*[@text='Search Wikipedia']"),
+                "Couldn't find searchButton",
+                5
+        );
+        waitForElementAndSendKeys(
+                By.className("android.widget.EditText"),
+                search,
+                "Couldn't find searchField",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='" + articleName + "']"),
+                "Couldn't find article " + articleName,
+                15
+        );
+        assertElementPresent(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "Couldn't find article's title"
+        );
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
@@ -625,5 +651,13 @@ public class FirstTest {
                 "couldn't press button X",
                 5
         );
+    }
+
+    private void assertElementPresent(By by, String errorMessage) {
+        int amount = getAmountOfElements(by);
+        if (amount == 0) {
+            String defaultMessage = "An element '" + by.toString() + "' supposed to be present. \n";
+            throw new AssertionError(defaultMessage + " " + errorMessage);
+        }
     }
 }
