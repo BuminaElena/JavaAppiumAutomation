@@ -327,36 +327,40 @@ public class FirstTest {
     @Test
     public void testChangeScreenOrientationOnSearchResults() {
         String search = "java";
-        waitForElementAndClick(
-                By.xpath("//*[@text='Search Wikipedia']"),
-                "couldn't find searchButton",
-                5
-        );
-        waitForElementAndSendKeys(
-                By.className("android.widget.EditText"),
-                search,
-                "couldn't find searchField",
-                5
-        );
-        waitForElementAndClick(
-                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Java (programming language)']"),
-                "couldn't find 'Java (programming language)' by request " + search,
-                15
-        );
-        String titleBeforeRotation = waitForElementAndGetAttribute(
-                By.id("org.wikipedia:id/view_page_title_text"),
-                "text",
-                "Can't find title of article",
-                15
-        );
-        driver.rotate(ScreenOrientation.LANDSCAPE);
-        String titleAfterRotation = waitForElementAndGetAttribute(
-                By.id("org.wikipedia:id/view_page_title_text"),
-                "text",
-                "Can't find title of article",
-                15
-        );
-        Assert.assertEquals("Article title has been changed after rotation", titleBeforeRotation, titleAfterRotation);
+        try {
+            waitForElementAndClick(
+                    By.xpath("//*[@text='Search Wikipedia']"),
+                    "couldn't find searchButton",
+                    5
+            );
+            waitForElementAndSendKeys(
+                    By.className("android.widget.EditText"),
+                    search,
+                    "couldn't find searchField",
+                    5
+            );
+            waitForElementAndClick(
+                    By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Java (programming language)']"),
+                    "couldn't find 'Java (programming language)' by request " + search,
+                    15
+            );
+            String titleBeforeRotation = waitForElementAndGetAttribute(
+                    By.id("org.wikipedia:id/view_page_title_text"),
+                    "text",
+                    "Can't find title of article",
+                    15
+            );
+            driver.rotate(ScreenOrientation.LANDSCAPE);
+            String titleAfterRotation = waitForElementAndGetAttribute(
+                    By.id("org.wikipedia:id/view_page_title_text"),
+                    "text",
+                    "Can't find title of article",
+                    15
+            );
+            Assert.assertEquals("Article title has been changed after rotation", titleBeforeRotation, titleAfterRotation);
+        } finally {
+            driver.rotate(ScreenOrientation.PORTRAIT);
+        }
     }
 
     @Test
