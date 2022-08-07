@@ -574,9 +574,10 @@ public class FirstTest {
                 "couldn't find article " + articleName,
                 15
         );
+        // дожидаемся появления заголовка статьи (иначе некорректно срабатывает нажатие на меню)
         waitForElementPresent(
-                By.xpath("//*[@text='" + articleName + "']"),
-                "couldn't find article " + articleName,
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "couldn't find article's title" + articleName,
                 5
         );
         waitForElementAndClick(
