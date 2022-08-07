@@ -385,6 +385,59 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void saveTwoArticles() {
+        String firstSearch = "java",
+                secondSearch = "python",
+                firstArticleName = "Java (programming language)",
+                secondArticleName = "Python (programming language)",
+                folderName = "Programming learning";
+        findAndSaveArticleToList(
+                firstSearch,
+                firstArticleName,
+                folderName);
+        findAndSaveArticleToList(
+                secondSearch,
+                secondArticleName,
+                folderName);
+        // переходим в сохраненные списки
+        waitForElementAndClick(
+                By.xpath("//android.widget.FrameLayout[@content-desc='My lists']/android.widget.ImageView"),
+                "couldn't find button My Lists",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='" + folderName + "']"),
+                "couldn't find created folder",
+                15
+        );
+        swipeElementToLeft(
+                By.xpath("//*[@text='" + firstArticleName + "']"),
+                "couldn't find saved article"
+        );
+        waitForElementNotPresent(
+                By.xpath("//*[@text='" + firstArticleName + "']"),
+                "first article still present",
+                5
+        );
+        // кликаем по второй статье
+        waitForElementAndClick(
+                By.xpath("//*[@text='" + secondArticleName + "']"),
+                "second article doesn't present",
+                5
+        );
+        // получаем заголовок статьи
+        String title = waitForElementAndGetAttribute(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "text",
+                "Couldn't find attribute",
+                5
+        );
+        // сравниваем заголовок с ожидаемым
+        Assert.assertEquals("Title of article doesn't equal expected", title, secondArticleName);
+
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
@@ -504,4 +557,72 @@ public class FirstTest {
         return element.getAttribute(attribute);
     }
 
+    private void findAndSaveArticleToList(String search, String articleName, String folderName) {
+        waitForElementAndClick(
+                By.xpath("//*[@text='Search Wikipedia']"),
+                "couldn't find searchButton",
+                5
+        );
+        waitForElementAndSendKeys(
+                By.className("android.widget.EditText"),
+                search,
+                "couldn't find searchField",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='" + articleName + "']"),
+                "couldn't find article " + articleName,
+                15
+        );
+        waitForElementPresent(
+                By.xpath("//*[@text='" + articleName + "']"),
+                "couldn't find article " + articleName,
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageView[@content-desc='More options']"),
+                "couldn't find menu button",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='Add to reading list']"),
+                "couldn't find option Add to reading list",
+                10
+        );
+        // если списка еще не существует, создаем его
+        if (getAmountOfElements(By.id("org.wikipedia:id/onboarding_button")) == 1) {
+            waitForElementAndClick(
+                    By.id("org.wikipedia:id/onboarding_button"),
+                    "couldn't find button Got it",
+                    5
+            );
+            waitForElementAndClear(
+                    By.id("org.wikipedia:id/text_input"),
+                    "couldn't clear text in folder input",
+                    5
+            );
+            waitForElementAndSendKeys(
+                    By.id("org.wikipedia:id/text_input"),
+                    folderName,
+                    "couldn't put text in folder input",
+                    5
+            );
+            waitForElementAndClick(
+                    By.xpath("//*[@text='OK']"),
+                    "couldn't press button OK",
+                    5
+            );
+        } else {  // если список уже существует, выбираем его
+            waitForElementAndClick(
+                    By.xpath("//*[@text='" + folderName + "']"),
+                    "couldn't click on folder " + folderName,
+                    5
+            );
+        }
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
+                "couldn't press button X",
+                5
+        );
+    }
 }
