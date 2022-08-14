@@ -75,4 +75,22 @@ public class SearchTests extends CoreTestCase {
         searchPageObject.checkWordInResult(search);
     }
 
+    @Test
+    public void testCheckSearchResultByTitleAndDescription() {
+        String search = "python",
+                firstTitle = "Python",
+                firstDescription = "Wikimedia disambiguation page",
+                secondTitle = "Python (programming language)",
+                secondDescription = "General-purpose programming language",
+                thirdTitle = "Python syntax and semantics",
+                thirdDescription = "Syntax of the Python programming language";
+
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine(search);
+        searchPageObject.waitForElementByTitleAndDescription(firstTitle, firstDescription);
+        searchPageObject.waitForElementByTitleAndDescription(secondTitle, secondDescription);
+        searchPageObject.waitForElementByTitleAndDescription(thirdTitle, thirdDescription);
+    }
 }
