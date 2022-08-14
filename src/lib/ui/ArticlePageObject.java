@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 
 import io.appium.java_client.AppiumDriver;
 
-public class ArticlePageObject extends MainPageObject{
+public class ArticlePageObject extends MainPageObject {
 
     private static final String
             TITLE = "org.wikipedia:id/view_page_title_text",
@@ -48,28 +48,35 @@ public class ArticlePageObject extends MainPageObject{
                 "couldn't find option Add to reading list",
                 5
         );
-        waitForElementAndClick(
-                By.id(ADD_TO_MY_LIST_OVERLAY),
-                "couldn't find button Got it",
-                5
-        );
-        waitForElementAndClear(
-                By.id(MY_LIST_NAME_INPUT),
-                "couldn't put text in folder input",
-                5
-        );
-
-        waitForElementAndSendKeys(
-                By.id(MY_LIST_NAME_INPUT),
-                nameOfFolder,
-                "couldn't put text in folder input",
-                5
-        );
-        waitForElementAndClick(
-                By.xpath(MY_LIST_OK_BUTTON),
-                "couldn't press button OK",
-                5
-        );
+        // если папки еще не существует
+        if (getAmountOfElements(By.id(ADD_TO_MY_LIST_OVERLAY)) == 1) {
+            waitForElementAndClick(
+                    By.id(ADD_TO_MY_LIST_OVERLAY),
+                    "couldn't find button Got it",
+                    5
+            );
+            waitForElementAndClear(
+                    By.id(MY_LIST_NAME_INPUT),
+                    "couldn't put text in folder input",
+                    5
+            );
+            waitForElementAndSendKeys(
+                    By.id(MY_LIST_NAME_INPUT),
+                    nameOfFolder,
+                    "couldn't put text in folder input",
+                    5
+            );
+            waitForElementAndClick(
+                    By.xpath(MY_LIST_OK_BUTTON),
+                    "couldn't press button OK",
+                    5
+            );
+        } else
+        //если папка уже существует
+        {
+            MyListsPageObject myListsPageObject = new MyListsPageObject(driver);
+            myListsPageObject.openFolderByName(nameOfFolder);
+        }
     }
 
     public void closeArticle() {
@@ -77,6 +84,13 @@ public class ArticlePageObject extends MainPageObject{
                 By.xpath(CLOSE_ARTICLE_BUTTON),
                 "couldn't press button X",
                 5
+        );
+    }
+
+    public void checkArticleHasTitle() {
+        assertElementPresent(
+                By.xpath(CLOSE_ARTICLE_BUTTON),
+                "Couldn't find article's title"
         );
     }
 

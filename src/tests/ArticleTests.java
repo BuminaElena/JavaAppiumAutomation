@@ -45,4 +45,19 @@ public class ArticleTests extends CoreTestCase {
 
     }
 
+    @Test
+    public void testCheckArticleHasTitle() {
+        String search = "Appium",
+                articleName = "Appium";
+
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine(search);
+        searchPageObject.clickByArticleWithSubstring(articleName);
+
+        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        articlePageObject.checkArticleHasTitle();
+    }
+
 }

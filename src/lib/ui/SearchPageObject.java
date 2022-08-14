@@ -1,6 +1,10 @@
 package lib.ui;
 
+import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
 
 import io.appium.java_client.AppiumDriver;
 
@@ -12,6 +16,7 @@ public class SearchPageObject extends MainPageObject {
             SEARCH_CANCEL_BUTTON = "search_close_btn",
             SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='{SUBSTRING}']",
             SEARCH_RESULT_ELEMENT = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']",
+            SEARCH_RESULT_TITLE_ELEMENT = "//*[@resource-id='org.wikipedia:id/search_results_list']//*[@resource-id='org.wikipedia:id/page_list_item_title']",
             SEARCH_EMPTY_RESULT_ELEMENT = "//*[@resource-id='org.wikipedia:id/search_empty_text']";
 
     public SearchPageObject(AppiumDriver driver) {
@@ -71,10 +76,38 @@ public class SearchPageObject extends MainPageObject {
                 15
         );
     }
+
     public void assertThereIsNoResultOfSearch() {
         assertElementNotPresent(
                 By.xpath(SEARCH_RESULT_ELEMENT),
                 "We supposed not to find any results"
         );
+    }
+
+    public List<WebElement> getListOfFoundArticlesTitles() {
+        return waitForListOfElementsPresent(
+                By.xpath(SEARCH_RESULT_TITLE_ELEMENT),
+                "can't find articles by the request",
+                15
+        );
+    }
+
+    public void checkSearchFieldText() {
+        assertElementHasText(
+                By.xpath(SEARCH_INPUT),
+                "Search…",
+                "unexpected text in search field",
+                5
+        );
+    }
+
+    public void checkWordInResult(String word) {
+        for (WebElement element : getListOfFoundArticlesTitles()) {
+            String elementText = element.getText().toLowerCase();
+            Assert.assertTrue(
+                    "Result doesn't contains " + word + ". Result is " + elementText,
+                    elementText.contains(word.toLowerCase())
+            );
+        }
     }
 }

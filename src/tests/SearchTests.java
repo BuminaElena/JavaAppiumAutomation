@@ -8,6 +8,14 @@ import lib.ui.SearchPageObject;
 public class SearchTests extends CoreTestCase {
 
     @Test
+    public void testSearchFieldText() {
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+
+        searchPageObject.initSearchInput();
+        searchPageObject.checkSearchFieldText();
+    }
+
+    @Test
     public void testSearch() {
         SearchPageObject searchPageObject = new SearchPageObject(driver);
 
@@ -53,6 +61,18 @@ public class SearchTests extends CoreTestCase {
         searchPageObject.waitForEmptyResultsLabel();
         searchPageObject.assertThereIsNoResultOfSearch();
 
+    }
+
+    @Test
+    public void testSearchByWord() {
+        String search = "Java";
+
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine(search);
+
+        searchPageObject.checkWordInResult(search);
     }
 
 }
