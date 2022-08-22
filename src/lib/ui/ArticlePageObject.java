@@ -1,6 +1,5 @@
 package lib.ui;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import io.appium.java_client.AppiumDriver;
@@ -23,7 +22,7 @@ public class ArticlePageObject extends MainPageObject {
     }
 
     public WebElement waitForTitleElement() {
-        return waitForElementPresent("org.wikipedia:id/view_page_title_text", "Can't find article title on page", 15);
+        return waitForElementPresent("id:org.wikipedia:id/view_page_title_text", "Can't find article title on page", 15);
     }
 
     public String getArticleTitle() {

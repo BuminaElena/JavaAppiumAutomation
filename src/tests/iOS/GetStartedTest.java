@@ -5,7 +5,7 @@ import lib.iOSTestCase;
 import lib.ui.WelcomePageObject;
 import org.junit.Test;
 
-public class GetStartedTest extends CoreTestCase {
+public class GetStartedTest extends iOSTestCase {
 
     @Test
     public void testPassThroughWelcome(){
@@ -21,8 +21,6 @@ public class GetStartedTest extends CoreTestCase {
         welcomePage.clickNextButton();
 
         welcomePage.waitForLearnMoreAboutDataCollectedText();
-        welcomePage.clickNextButton();
-
-
+        welcomePage.clickGetStartedButton();
     }
 }

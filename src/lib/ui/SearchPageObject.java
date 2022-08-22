@@ -1,7 +1,6 @@
 package lib.ui;
 
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
