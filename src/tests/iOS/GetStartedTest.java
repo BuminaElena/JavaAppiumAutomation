@@ -1,10 +1,11 @@
 package tests.iOS;
 
+import lib.CoreTestCase;
 import lib.iOSTestCase;
 import lib.ui.WelcomePageObject;
 import org.junit.Test;
 
-public class GetStartedTest extends iOSTestCase {
+public class GetStartedTest extends CoreTestCase {
 
     @Test
     public void testPassThroughWelcome(){
