@@ -2,7 +2,6 @@ package tests.iOS;
 
 import lib.iOSTestCase;
 import lib.ui.WelcomePageObject;
-import org.apache.commons.lang3.builder.ToStringExclude;
 import org.junit.Test;
 
 public class GetStartedTest extends iOSTestCase {

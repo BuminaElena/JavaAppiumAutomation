@@ -52,16 +52,16 @@ public class CoreTestCase extends TestCase {
         if (platform.equals(PLATFORM_ANDROID)) {
             capabilities.setCapability("platformName", "Android");
             capabilities.setCapability("deviceName", "AndroidTestDevice");
-            capabilities.setCapability("platformVersion", "8.0");
+            capabilities.setCapability("platformVersion", "10");
             capabilities.setCapability("automationName", "Appium");
             capabilities.setCapability("appPackage", "org.wikipedia");
             capabilities.setCapability("appActivity", ".main.MainActivity");
-            capabilities.setCapability("app", "C:\\Users\\user\\Documents\\JavaAppiumAutomation\\apks\\org.wikipedia.apk");
+            capabilities.setCapability("app", "/Users/elenabumina/IdeaProjects/JavaAppiumAutomation/src/apks/org.wikipedia.apk");
         } else if (platform.equals(PLATFORM_IOS)) {
             capabilities.setCapability("platformName", "iOS");
-            capabilities.setCapability("deviceName", "iPhone SE 15.5");
+            capabilities.setCapability("deviceName", "iPhone 8");
             capabilities.setCapability("platformVersion", "15.5");
-            capabilities.setCapability("app", "/Users/elenabumina/Downloads/Wikipedia.app");
+            capabilities.setCapability("app", "/Users/elenabumina/IdeaProjects/JavaAppiumAutomation/src/apks/Wikipedia.app");
         } else {
             throw new Exception("Can't run platform from env variable. Platform value " + platform);
         }
