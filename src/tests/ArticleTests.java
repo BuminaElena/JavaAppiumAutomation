@@ -1,5 +1,7 @@
 package tests;
 
+import lib.ui.factories.ArticlePageObjectFactory;
+import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Test;
 
 import lib.CoreTestCase;
@@ -11,20 +13,20 @@ public class ArticleTests extends CoreTestCase {
     @Test
     public void testCompareArticleTitle() {
 
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
-        searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
+        searchPageObject.clickByArticleWithSubstring("Java");
 
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
 
         articlePageObject.waitForTitleElement();
         String articleTitle = articlePageObject.getArticleTitle();
 
         assertEquals(
                 "Unexpected title",
-                "Java (programming language)",
+                "Java",
                 articleTitle
         );
     }
@@ -32,13 +34,13 @@ public class ArticleTests extends CoreTestCase {
     @Test
     public void testSwipeArticle() {
 
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
 
         searchPageObject.initSearchInput();
-        searchPageObject.typeSearchLine("Appium");
-        searchPageObject.clickByArticleWithSubstring("Appium");
+        searchPageObject.typeSearchLine("Java");
+        searchPageObject.clickByArticleWithSubstring("Java");
 
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
 
         articlePageObject.waitForTitleElement();
         articlePageObject.swipeToFooter();
@@ -47,16 +49,16 @@ public class ArticleTests extends CoreTestCase {
 
     @Test
     public void testCheckArticleHasTitle() {
-        String search = "Appium",
-                articleName = "Appium";
+        String search = "Java",
+                articleName = "Java";
 
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(search);
         searchPageObject.clickByArticleWithSubstring(articleName);
 
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
         articlePageObject.checkArticleHasTitle();
     }
 

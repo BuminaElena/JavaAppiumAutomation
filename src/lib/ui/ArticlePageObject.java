@@ -1,20 +1,25 @@
 package lib.ui;
 
+import lib.Platform;
+import lib.ui.factories.MyListsPageObjectFactory;
 import org.openqa.selenium.WebElement;
 
 import io.appium.java_client.AppiumDriver;
 
-public class ArticlePageObject extends MainPageObject {
+abstract public class ArticlePageObject extends MainPageObject {
 
-    private static final String
-            TITLE = "id:org.wikipedia:id/view_page_title_text",
-            FOOTER_ELEMENT = "xpath://*[@text='View page in browser']",
-            OPTIONS_BUTTON = "xpath://android.widget.ImageView[@content-desc='More options']",
-            OPTIONS_ADD_TO_MY_LIST_BUTTON = "xpath://*[@text='Add to reading list']",
-            ADD_TO_MY_LIST_OVERLAY = "id:org.wikipedia:id/onboarding_button",
-            MY_LIST_NAME_INPUT = "id:org.wikipedia:id/text_input",
-            MY_LIST_OK_BUTTON = "xpath://*[@text='OK']",
-            CLOSE_ARTICLE_BUTTON = "xpath://android.widget.ImageButton[@content-desc='Navigate up']";
+    protected static String
+            TITLE,
+            FOOTER_ELEMENT,
+            OPTIONS_BUTTON,
+            OPTIONS_ADD_TO_MY_LIST_BUTTON,
+            ADD_TO_MY_LIST_OVERLAY,
+            MY_LIST_NAME_INPUT,
+            MY_LIST_OK_BUTTON,
+            CLOSE_ARTICLE_BUTTON,
+
+            CANCEL_SEARCH_BUTTON;
+
 
 
     public ArticlePageObject(AppiumDriver driver) {
@@ -22,18 +27,30 @@ public class ArticlePageObject extends MainPageObject {
     }
 
     public WebElement waitForTitleElement() {
-        return waitForElementPresent("id:org.wikipedia:id/view_page_title_text", "Can't find article title on page", 15);
+        return waitForElementPresent(TITLE, "Can't find article title on page", 15);
     }
 
     public String getArticleTitle() {
-        return waitForTitleElement().getText();
+        if (Platform.getInstance().isAndroid()) {
+            return waitForTitleElement().getText();
+        } else {
+            return waitForTitleElement().getAttribute("name");
+        }
+
     }
 
     public void swipeToFooter() {
-        swipeUpToFindElement(
-                FOOTER_ELEMENT,
-                "Can't find the end of the article",
-                20);
+        if (Platform.getInstance().isIOS()) {
+            swipeUpTillElementAppear(
+                    FOOTER_ELEMENT,
+                    "Can't find the end of the article",
+                    40);
+        } else {
+            swipeUpToFindElement(
+                    FOOTER_ELEMENT,
+                    "Can't find the end of the article",
+                    40);
+        }
     }
 
     public void addArticleToMyList(String nameOfFolder) {
@@ -73,7 +90,7 @@ public class ArticlePageObject extends MainPageObject {
         } else
         //если папка уже существует
         {
-            MyListsPageObject myListsPageObject = new MyListsPageObject(driver);
+            MyListsPageObject myListsPageObject = MyListsPageObjectFactory.get(driver);
             myListsPageObject.openFolderByName(nameOfFolder);
         }
     }
@@ -84,13 +101,23 @@ public class ArticlePageObject extends MainPageObject {
                 "couldn't press button X",
                 5
         );
+        if (Platform.getInstance().isIOS()) {
+            waitForElementAndClick(
+                    CANCEL_SEARCH_BUTTON,
+                    "Can't click button Cancel",
+                    5);
+        }
     }
 
     public void checkArticleHasTitle() {
         assertElementPresent(
-                CLOSE_ARTICLE_BUTTON,
+                TITLE,
                 "Couldn't find article's title"
         );
+    }
+
+    public void addArticlesToMySaved() {
+        waitForElementAndClick(OPTIONS_ADD_TO_MY_LIST_BUTTON, "Can't find option to add article to list", 5);
     }
 
 }

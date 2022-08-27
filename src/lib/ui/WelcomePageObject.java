@@ -10,7 +10,8 @@ public class WelcomePageObject extends MainPageObject {
             STEP_ADD_OR_EDIT_LANG_LINK = "xpath://XCUIElementTypeStaticText[@name='Добавить или изменить предпочтительные языки']",
             STEP_LEARN_MORE_ABOUT_DATA_COLLECTED_LINK = "xpath://XCUIElementTypeButton[@name='Узнать подробнее о сборе данных']",
             NEXT_LINK = "xpath://XCUIElementTypeButton[@name='Далее']",
-            GET_STARTED_BUTTON = "xpath://XCUIElementTypeStaticText[@name=\"Начать\"]";
+            GET_STARTED_BUTTON = "xpath://XCUIElementTypeStaticText[@name=\"Начать\"]",
+            SKIP = "id:Пропустить"        ;
 
 
     public WelcomePageObject(AppiumDriver driver) {
@@ -38,6 +39,10 @@ public class WelcomePageObject extends MainPageObject {
     }
 
     public void clickGetStartedButton() {
-        waitForElementAndClick(GET_STARTED_BUTTON, "Can't find Get started button",10);
+        waitForElementAndClick(GET_STARTED_BUTTON, "Can't find Get started button",5);
+    }
+
+    public void clickSkip() {
+        waitForElementAndClick(SKIP, "Can't find skip button",5);
     }
 }
