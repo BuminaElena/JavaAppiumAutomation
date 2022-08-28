@@ -61,7 +61,7 @@ abstract public class SearchPageObject extends MainPageObject {
 
     public void clickByArticleWithSubstring(String substring) {
         String searchResultXpath = getSearchResultString(substring);
-        waitForElementAndClick(searchResultXpath, "Can't find and click search result with substring " + substring, 10);
+        waitForElementAndClick(searchResultXpath, "Can't find and click search result with substring " + substring, 15);
     }
 
     public int getAmountOfFoundArticles() {
