@@ -52,7 +52,7 @@ abstract public class MyListsPageObject extends MainPageObject{
 
     public void swipeByArticleToDelete(String articleTitle) {
         waitForArticleToAppearByTitle(articleTitle);
-        String articleXpath = getSavedArticleXpathByTitle(articleTitle);
+        String articleXpath = getSavedArticleXpathByTitle(articleTitle) + "/.."; //ищем xpath родительского элемента
         swipeElementToLeft(
                 articleXpath,
                 "Can't swipe saved article"
@@ -60,6 +60,7 @@ abstract public class MyListsPageObject extends MainPageObject{
         if (Platform.getInstance().isIOS()) {
             clickElementToTheRightUpperCorner(articleXpath, "Can't find saved article");
         }
+
         waitForArticleToDisappearByTitle(articleTitle);
     }
 
@@ -71,4 +72,5 @@ abstract public class MyListsPageObject extends MainPageObject{
                 5
         );
     }
+
 }

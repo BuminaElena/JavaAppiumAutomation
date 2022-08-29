@@ -134,17 +134,12 @@ public class MainPageObject {
     }
 
     public void swipeElementToLeft(String locator, String errorMessage) {
-        WebElement element = waitForElementPresent(locator + "/..", errorMessage, 10);
-        System.out.println(locator+ "/..");
+        WebElement element = waitForElementPresent(locator, errorMessage, 10);
         int leftX = element.getLocation().getX();
         int rightX = leftX + element.getSize().width;
         int upperY = element.getLocation().getY();
         int middleY = upperY + element.getSize().height / 2;
-        System.out.println("swipe from (" + rightX + ", " + middleY + ")" );
-//        System.out.println("swipe from (" + rightX + ", " + middleY + ") to (" +leftX + ", " + middleY +")" );
-        System.out.println("Width " + driver.manage().window().getSize().getWidth() + ", heigh" + driver.manage().window().getSize().getHeight());
         TouchAction action = new TouchAction(driver);
-        Dimension size = driver.manage().window().getSize();
         action.press(PointOption.point(rightX, middleY));
         action.waitAction(WaitOptions.waitOptions(Duration.ofMillis(200)));
         if (Platform.getInstance().isAndroid()) {

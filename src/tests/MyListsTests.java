@@ -16,7 +16,7 @@ import lib.ui.SearchPageObject;
 public class MyListsTests extends CoreTestCase {
 
     @Test
-    public void testSaveFirstArticleToMyList(){
+    public void testSaveFirstArticleToMyList() throws InterruptedException {
 
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
 
@@ -27,6 +27,7 @@ public class MyListsTests extends CoreTestCase {
         ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
 
         articlePageObject.waitForTitleElement();
+        Thread.sleep(3000); //пауза, чтобы не ловить ошибку The previously found element ""Java" StaticText" is not present
         String articleTitle = articlePageObject.getArticleTitle();
         String folderName = "Learning programming";
         if (Platform.getInstance().isAndroid()) {
@@ -54,8 +55,8 @@ public class MyListsTests extends CoreTestCase {
 
         String firstSearch = "java",
                 secondSearch = "python",
-                firstArticleName = "Java (programming language)",
-                secondArticleName = "Python (programming language)",
+                firstArticleName = "Java",
+                secondArticleName = "Python",
                 folderName = "Programming learning";
 
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
@@ -68,7 +69,11 @@ public class MyListsTests extends CoreTestCase {
 
         articlePageObject.waitForTitleElement();
 
-        articlePageObject.addArticleToMyList(folderName);
+        if (Platform.getInstance().isAndroid()) {
+            articlePageObject.addArticleToMyList(folderName);
+        } else {
+            articlePageObject.addArticlesToMySaved();
+        }
         articlePageObject.closeArticle();
 
         searchPageObject.initSearchInput();
@@ -77,23 +82,25 @@ public class MyListsTests extends CoreTestCase {
 
         articlePageObject.waitForTitleElement();
 
-        articlePageObject.addArticleToMyList(folderName);
+        if (Platform.getInstance().isAndroid()) {
+            articlePageObject.addArticleToMyList(folderName);
+        } else {
+            articlePageObject.addArticlesToMySaved();
+        }
         articlePageObject.closeArticle();
 
         NavigationUI navigationUI = NavigationUIFactory.get(driver);
         navigationUI.clickMyLists();
 
         MyListsPageObject myListsPageObject = MyListsPageObjectFactory.get(driver);
-        myListsPageObject.openFolderByName(folderName);
+
+        if (Platform.getInstance().isAndroid()) {
+            myListsPageObject.openFolderByName(folderName);
+        }
 
         myListsPageObject.swipeByArticleToDelete(firstArticleName);
 
-        // кликаем по второй статье
-        myListsPageObject.clickOnArticleWithTitle(secondArticleName);
-        // получаем заголовок статьи
-        String articleTitle = articlePageObject.getArticleTitle();
-        // сравниваем заголовок с ожидаемым
-        assertEquals("Title of article doesn't equal expected", articleTitle, secondArticleName);
-
+        // проверяем, что в списке сохраненных есть статья с нужным заголовком
+        myListsPageObject.waitForArticleToAppearByTitle(secondArticleName);
     }
 }
