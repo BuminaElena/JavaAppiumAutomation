@@ -17,7 +17,7 @@ public class ArticleTests extends CoreTestCase {
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
-        searchPageObject.clickByArticleWithSubstring("Java");
+        searchPageObject.clickByArticleWithSubstring("bject-oriented programming language");
 
         ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
 
@@ -26,7 +26,7 @@ public class ArticleTests extends CoreTestCase {
 
         assertEquals(
                 "Unexpected title",
-                "Java",
+                "Java (programming language)",
                 articleTitle
         );
     }

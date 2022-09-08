@@ -14,6 +14,7 @@ abstract public class ArticlePageObject extends MainPageObject {
             FOOTER_ELEMENT,
             OPTIONS_BUTTON,
             OPTIONS_ADD_TO_MY_LIST_BUTTON,
+            OPTIONS_REMOVE_FROM_MY_LIST_BUTTON,
             ADD_TO_MY_LIST_OVERLAY,
             MY_LIST_NAME_INPUT,
             MY_LIST_OK_BUTTON,
@@ -34,7 +35,10 @@ abstract public class ArticlePageObject extends MainPageObject {
     public String getArticleTitle() {
         if (Platform.getInstance().isAndroid()) {
             return waitForTitleElement().getText();
-        } else {
+        } else if (Platform.getInstance().isMW()) {
+            return waitForTitleElement().getText();
+        }
+        else {
             return waitForTitleElement().getAttribute("name");
         }
 
@@ -43,6 +47,11 @@ abstract public class ArticlePageObject extends MainPageObject {
     public void swipeToFooter() {
         if (Platform.getInstance().isIOS()) {
             swipeUpTillElementAppear(
+                    FOOTER_ELEMENT,
+                    "Can't find the end of the article",
+                    40);
+        } else if (Platform.getInstance().isMW()) {
+            scrollWebPageTillElementNotVisible(
                     FOOTER_ELEMENT,
                     "Can't find the end of the article",
                     40);
@@ -97,11 +106,15 @@ abstract public class ArticlePageObject extends MainPageObject {
     }
 
     public void closeArticle() {
-        waitForElementAndClick(
-                CLOSE_ARTICLE_BUTTON,
-                "couldn't press button X",
-                5
-        );
+        if (Platform.getInstance().isIOS() || Platform.getInstance().isAndroid()) {
+            waitForElementAndClick(
+                    CLOSE_ARTICLE_BUTTON,
+                    "couldn't press button X",
+                    5
+            );
+        } else {
+            System.out.println("Method closeArticle does nothing for platform " + Platform.getInstance().getPlatformVar());
+        }
         if (Platform.getInstance().isIOS()) {
             waitForElementAndClick(
                     CANCEL_SEARCH_BUTTON,
@@ -117,8 +130,27 @@ abstract public class ArticlePageObject extends MainPageObject {
         );
     }
 
-    public void addArticlesToMySaved() {
+    public void
+    addArticlesToMySaved() {
+        if (Platform.getInstance().isMW()) {
+            removeArticleFromSavedIfItAdded();
+        }
         waitForElementAndClick(OPTIONS_ADD_TO_MY_LIST_BUTTON, "Can't find option to add article to list", 5);
+    }
+
+    public void removeArticleFromSavedIfItAdded() {
+        if (isElementPresent(OPTIONS_REMOVE_FROM_MY_LIST_BUTTON)) {
+            waitForElementAndClick(
+                    OPTIONS_REMOVE_FROM_MY_LIST_BUTTON,
+                    "Can't click button to remove an article from saved",
+                    1
+            );
+            System.out.println("remove from favorite");
+            waitForElementPresent(
+                    OPTIONS_ADD_TO_MY_LIST_BUTTON,
+                    "Can't find button to add an article to saved list after removing it from that list before"
+            );
+        }
     }
 
 }
