@@ -35,7 +35,7 @@ public class CoreTestCase extends TestCase {
             AppiumDriver driver = (AppiumDriver) this.driver;
             driver.rotate(ScreenOrientation.PORTRAIT);
         } else {
-            System.out.println("Method rotateScreenPortrait does nothing for platform " + Platform.getInstance());
+            System.out.println("Method rotateScreenPortrait does nothing for platform " + Platform.getInstance().getPlatformVar());
         }
     }
 

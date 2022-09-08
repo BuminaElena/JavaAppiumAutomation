@@ -8,7 +8,8 @@ abstract public class MyListsPageObject extends MainPageObject{
 
     protected static String
             FOLDER_BY_NAME_TPL,
-            ARTICLE_BY_TITLE_TPL;
+            ARTICLE_BY_TITLE_TPL,
+            REMOVE_FROM_SAVED_BUTTON_TPL;
 
     /* TEMPLATES METHODS */
     private static String getFolderXpathByName(String nameOfFolder) {
@@ -17,6 +18,10 @@ abstract public class MyListsPageObject extends MainPageObject{
 
     private static String getSavedArticleXpathByTitle(String articleTitle) {
         return ARTICLE_BY_TITLE_TPL.replace("{TITLE}", articleTitle);
+    }
+
+    private static String getRemoveButtonByTitle(String articleTitle) {
+        return REMOVE_FROM_SAVED_BUTTON_TPL.replace("{TITLE}", articleTitle);
     }
     /* TEMPLATES METHODS */
 
@@ -54,12 +59,25 @@ abstract public class MyListsPageObject extends MainPageObject{
     public void swipeByArticleToDelete(String articleTitle) {
         waitForArticleToAppearByTitle(articleTitle);
         String articleXpath = getSavedArticleXpathByTitle(articleTitle) + "/.."; //ищем xpath родительского элемента
-        swipeElementToLeft(
-                articleXpath,
-                "Can't swipe saved article"
-        );
+        if (Platform.getInstance().isAndroid() || Platform.getInstance().isIOS()) {
+            swipeElementToLeft(
+                    articleXpath,
+                    "Can't swipe saved article"
+            );
+        } else {
+            String removeLocator = getRemoveButtonByTitle(articleTitle);
+            waitForElementAndClick(
+                    removeLocator,
+                    "Can't click button to remove article from saved",
+                    10);
+        }
+
         if (Platform.getInstance().isIOS()) {
             clickElementToTheRightUpperCorner(articleXpath, "Can't find saved article");
+        }
+
+        if (Platform.getInstance().isMW()) {
+            driver.navigate().refresh();
         }
 
         waitForArticleToDisappearByTitle(articleTitle);
