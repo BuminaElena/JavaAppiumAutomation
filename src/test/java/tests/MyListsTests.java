@@ -43,8 +43,10 @@ public class MyListsTests extends CoreTestCase {
             auth.submitForm();
 
             String url = driver.getCurrentUrl();
-            String new_url = url.substring(0,11) + "m." + url.substring(11);
-            driver.get(new_url);
+            if (url.startsWith("https://en.wikipedia.org/")) {
+                String new_url = url.substring(0, 11) + "m." + url.substring(11);
+                driver.get(new_url);
+            }
 
             articlePageObject.waitForTitleElement();
             assertEquals(
@@ -101,8 +103,11 @@ public class MyListsTests extends CoreTestCase {
             auth.submitForm();
 
             String url = driver.getCurrentUrl();
-            String new_url = url.substring(0,11) + "m." + url.substring(11);
-            driver.get(new_url);
+            if (url.startsWith("https://en.wikipedia.org/"))
+            {
+                String new_url = url.substring(0, 11) + "m." + url.substring(11);
+                driver.get(new_url);
+            }
 
             articlePageObject.waitForTitleElement();
             assertEquals(
