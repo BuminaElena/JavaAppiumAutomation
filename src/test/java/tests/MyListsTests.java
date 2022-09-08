@@ -69,12 +69,12 @@ public class MyListsTests extends CoreTestCase {
     }
 
     @Test
-    public void testSaveTwoArticles() {
+    public void testSaveTwoArticles() throws InterruptedException {
 
         String firstSearch = "java",
                 secondSearch = "python",
-                firstArticleName = "Java",
-                secondArticleName = "Python",
+                firstArticleName = "oriented programming language",
+                secondArticleName = "programming language",
                 folderName = "Programming learning";
 
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
@@ -87,10 +87,28 @@ public class MyListsTests extends CoreTestCase {
 
         articlePageObject.waitForTitleElement();
 
+        String firstArticleTitle = articlePageObject.getArticleTitle();
+
         if (Platform.getInstance().isAndroid()) {
             articlePageObject.addArticleToMyList(folderName);
         } else {
             articlePageObject.addArticlesToMySaved();
+        }
+        if (Platform.getInstance().isMW()) {
+            AuthorizationPageObject auth = new AuthorizationPageObject(driver);
+            auth.clickAuthButton();
+            auth.enterLoginData(login, password);
+            auth.submitForm();
+
+            String url = driver.getCurrentUrl();
+            String new_url = url.substring(0,11) + "m." + url.substring(11);
+            driver.get(new_url);
+
+            articlePageObject.waitForTitleElement();
+            assertEquals(
+                    "We are not on the same page after login",
+                    firstArticleTitle,
+                    articlePageObject.getArticleTitle());
         }
         articlePageObject.closeArticle();
 
@@ -99,6 +117,7 @@ public class MyListsTests extends CoreTestCase {
         searchPageObject.clickByArticleWithSubstring(secondArticleName);
 
         articlePageObject.waitForTitleElement();
+        String secondArticleTitle = articlePageObject.getArticleTitle();
 
         if (Platform.getInstance().isAndroid()) {
             articlePageObject.addArticleToMyList(folderName);
@@ -108,6 +127,7 @@ public class MyListsTests extends CoreTestCase {
         articlePageObject.closeArticle();
 
         NavigationUI navigationUI = NavigationUIFactory.get(driver);
+        navigationUI.openNavigation();
         navigationUI.clickMyLists();
 
         MyListsPageObject myListsPageObject = MyListsPageObjectFactory.get(driver);
@@ -116,9 +136,9 @@ public class MyListsTests extends CoreTestCase {
             myListsPageObject.openFolderByName(folderName);
         }
 
-        myListsPageObject.swipeByArticleToDelete(firstArticleName);
+        myListsPageObject.swipeByArticleToDelete(firstArticleTitle);
 
         // проверяем, что в списке сохраненных есть статья с нужным заголовком
-        myListsPageObject.waitForArticleToAppearByTitle(secondArticleName);
+        myListsPageObject.waitForArticleToAppearByTitle(secondArticleTitle);
     }
 }
