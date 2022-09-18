@@ -1,8 +1,13 @@
 package tests;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Features;
+import io.qameta.allure.Step;
 import lib.Platform;
 import lib.ui.factories.ArticlePageObjectFactory;
 import lib.ui.factories.SearchPageObjectFactory;
+import org.junit.Assert;
 import org.junit.Test;
 
 import lib.CoreTestCase;
@@ -12,6 +17,9 @@ import lib.ui.SearchPageObject;
 public class ChangeAppConditionTests extends CoreTestCase {
 
     @Test
+    @Step("Starting test testChangeScreenOrientationOnSearchResults")
+    @Description("Change screen orientation and make sure that article's title is the same")
+    @Features(value = {@Feature(value = "Search"),@Feature(value = "AppCondition"),@Feature(value = "Article")})
     public void testChangeScreenOrientationOnSearchResults() {
         if (Platform.getInstance().isMW()) {
             return;
@@ -29,15 +37,18 @@ public class ChangeAppConditionTests extends CoreTestCase {
         String titleBeforeRotation = articlePageObject.getArticleTitle();
         rotateScreenLandscape();
         String titleAfterRotation = articlePageObject.getArticleTitle();
-        assertEquals("Article title has been changed after rotation", titleBeforeRotation, titleAfterRotation);
+        Assert.assertEquals("Article title has been changed after rotation", titleBeforeRotation, titleAfterRotation);
 
         rotateScreenPortrait();
         String titleAfterSecondRotation = articlePageObject.getArticleTitle();
-        assertEquals("Article title has been changed after rotation", titleAfterRotation, titleAfterSecondRotation);
+        Assert.assertEquals("Article title has been changed after rotation", titleAfterRotation, titleAfterSecondRotation);
 
     }
 
     @Test
+    @Step("Starting test testCheckSearchArticleInBackground")
+    @Description("Send app to background and make sure that search result is the same")
+    @Features(value = {@Feature(value = "Search"),@Feature(value = "AppCondition")})
     public void testCheckSearchArticleInBackground() {
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
 

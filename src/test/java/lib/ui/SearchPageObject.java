@@ -1,5 +1,6 @@
 package lib.ui;
 
+import io.qameta.allure.Step;
 import org.junit.Assert;
 import org.openqa.selenium.WebElement;
 
@@ -34,37 +35,45 @@ abstract public class SearchPageObject extends MainPageObject {
     }
     /* TEMPLATES METHODS */
 
+    @Step("Initializing the search field")
     public void initSearchInput() {
         waitForElementAndClick(SEARCH_INIT_ELEMENT, "Can't click search init element", 5);
         waitForElementPresent(SEARCH_INPUT, "Can't find search input element after clicking search init element", 5);
     }
 
+    @Step("Wait for button to cancel search result")
     public void waitForCancelButtonToAppear() {
         waitForElementPresent(SEARCH_CANCEL_BUTTON, "Can't find search cancel button", 5);
     }
 
+    @Step("Wait for cancel button to disappear")
     public void waitForCancelButtonToDisappear() {
         waitForElementNotPresent(SEARCH_CANCEL_BUTTON, "Search cancel button is still present", 5);
     }
 
+    @Step("Click button to cancel search result")
     public void clickCancelSearch() {
         waitForElementAndClick(SEARCH_CANCEL_BUTTON, "Can't find and click search cancel button", 5);
     }
 
+    @Step("Typing '{searchLine}' to the search line")
     public void typeSearchLine(String searchLine) {
         waitForElementAndSendKeys(SEARCH_INPUT, searchLine, "Can't find and type into search input", 5);
     }
 
+    @Step("Wait for search result")
     public void waitForSearchResult(String substring) {
         String searchResultXpath = getSearchResultString(substring);
         waitForElementPresent(searchResultXpath, "Can't find search result with substring " + substring);
     }
 
+    @Step("Wait for search result and select an article by substring in article title")
     public void clickByArticleWithSubstring(String substring) {
         String searchResultXpath = getSearchResultString(substring);
         waitForElementAndClick(searchResultXpath, "Can't find and click search result with substring " + substring, 15);
     }
 
+    @Step("Getting amount of found articles")
     public int getAmountOfFoundArticles() {
         waitForElementPresent(
                 SEARCH_RESULT_ELEMENT,
@@ -74,6 +83,7 @@ abstract public class SearchPageObject extends MainPageObject {
         return getAmountOfElements(SEARCH_RESULT_ELEMENT);
     }
 
+    @Step("Wait for empty result label")
     public void waitForEmptyResultsLabel() {
         waitForElementPresent(
                 SEARCH_EMPTY_RESULT_ELEMENT,
@@ -82,6 +92,7 @@ abstract public class SearchPageObject extends MainPageObject {
         );
     }
 
+    @Step("Making sure there are no results for the search")
     public void assertThereIsNoResultOfSearch() {
         assertElementNotPresent(
                 SEARCH_RESULT_ELEMENT,

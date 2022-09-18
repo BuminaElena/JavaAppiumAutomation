@@ -1,5 +1,6 @@
 package lib.ui;
 
+import io.qameta.allure.Step;
 import lib.Platform;
 import lib.ui.factories.MyListsPageObjectFactory;
 import org.openqa.selenium.WebElement;
@@ -28,11 +29,14 @@ abstract public class ArticlePageObject extends MainPageObject {
         super(driver);
     }
 
+    @Step("Waiting for title of the article page")
     public WebElement waitForTitleElement() {
         return waitForElementPresent(TITLE, "Can't find article title on page", 15);
     }
 
+    @Step("Get article title")
     public String getArticleTitle() {
+        screenshot(this.takeScreenshot("article_title"));
         if (Platform.getInstance().isAndroid()) {
             return waitForTitleElement().getText();
         } else if (Platform.getInstance().isMW()) {
@@ -44,6 +48,7 @@ abstract public class ArticlePageObject extends MainPageObject {
 
     }
 
+    @Step("Swiping to footer of article page")
     public void swipeToFooter() {
         if (Platform.getInstance().isIOS()) {
             swipeUpTillElementAppear(
@@ -63,6 +68,7 @@ abstract public class ArticlePageObject extends MainPageObject {
         }
     }
 
+    @Step("Add article to my list")
     public void addArticleToMyList(String nameOfFolder) {
         waitForElementAndClick(
                 OPTIONS_BUTTON,
@@ -105,6 +111,7 @@ abstract public class ArticlePageObject extends MainPageObject {
         }
     }
 
+    @Step("Close article")
     public void closeArticle() {
         if (Platform.getInstance().isIOS() || Platform.getInstance().isAndroid()) {
             waitForElementAndClick(
@@ -123,6 +130,7 @@ abstract public class ArticlePageObject extends MainPageObject {
         }
     }
 
+    @Step("Make sure that the article has a title")
     public void checkArticleHasTitle() {
         assertElementPresent(
                 TITLE,
@@ -130,14 +138,15 @@ abstract public class ArticlePageObject extends MainPageObject {
         );
     }
 
-    public void
-    addArticlesToMySaved() {
+    @Step("Add article to my saved")
+    public void addArticlesToMySaved() {
         if (Platform.getInstance().isMW()) {
             removeArticleFromSavedIfItAdded();
         }
         waitForElementAndClick(OPTIONS_ADD_TO_MY_LIST_BUTTON, "Can't find option to add article to list", 5);
     }
 
+    @Step("Remove article from saved if it was added")
     public void removeArticleFromSavedIfItAdded() {
         if (isElementPresent(OPTIONS_REMOVE_FROM_MY_LIST_BUTTON)) {
             waitForElementAndClick(

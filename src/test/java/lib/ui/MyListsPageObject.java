@@ -1,6 +1,7 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import io.qameta.allure.Step;
 import lib.Platform;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -29,6 +30,7 @@ abstract public class MyListsPageObject extends MainPageObject{
         super(driver);
     }
 
+    @Step("Open folder '{nameOfFolder}'")
     public void openFolderByName(String nameOfFolder) {
         String folderNameXpath = getFolderXpathByName(nameOfFolder);
         waitForElementAndClick(
@@ -38,6 +40,7 @@ abstract public class MyListsPageObject extends MainPageObject{
         );
     }
 
+    @Step("Make sure that article '{articleTitle}' disappeared")
     public void waitForArticleToDisappearByTitle(String articleTitle) {
         String articleXpath = getSavedArticleXpathByTitle(articleTitle);
         waitForElementNotPresent(
@@ -47,6 +50,7 @@ abstract public class MyListsPageObject extends MainPageObject{
         );
     }
 
+    @Step("Make sure that article '{articleTitle}' is in saved")
     public void waitForArticleToAppearByTitle(String articleTitle) {
         String articleXpath = getSavedArticleXpathByTitle(articleTitle);
         waitForElementPresent(
@@ -56,7 +60,8 @@ abstract public class MyListsPageObject extends MainPageObject{
         );
     }
 
-    public void swipeByArticleToDelete(String articleTitle) {
+    @Step("Swipe article '{articleTitle}' to delete")
+    public void swipeByArticleToDelete(String articleTitle) throws InterruptedException {
         waitForArticleToAppearByTitle(articleTitle);
         String articleXpath = getSavedArticleXpathByTitle(articleTitle) + "/.."; //ищем xpath родительского элемента
         if (Platform.getInstance().isAndroid() || Platform.getInstance().isIOS()) {
@@ -66,6 +71,7 @@ abstract public class MyListsPageObject extends MainPageObject{
             );
         } else {
             String removeLocator = getRemoveButtonByTitle(articleTitle);
+            Thread.sleep(2000);
             waitForElementAndClick(
                     removeLocator,
                     "Can't click button to remove article from saved",
@@ -83,6 +89,7 @@ abstract public class MyListsPageObject extends MainPageObject{
         waitForArticleToDisappearByTitle(articleTitle);
     }
 
+    @Step("Click on saved article with title '{articleTitle}'")
     public void clickOnArticleWithTitle(String articleTitle) {
         String articleXpath = getSavedArticleXpathByTitle(articleTitle);
         waitForElementAndClick(

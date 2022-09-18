@@ -1,7 +1,9 @@
 package tests;
 
+import io.qameta.allure.*;
 import lib.Platform;
 import lib.ui.factories.SearchPageObjectFactory;
+import org.junit.Assert;
 import org.junit.Test;
 
 import lib.CoreTestCase;
@@ -10,14 +12,24 @@ import lib.ui.SearchPageObject;
 public class SearchTests extends CoreTestCase {
 
     @Test
+    @Step("Starting test testSearchFieldText")
+    @Description("Make sure that search field has text 'Search...' (only for ios and android)")
+    @Feature(value = "Search")
+    @Severity(value = SeverityLevel.NORMAL)
     public void testSearchFieldText() {
+        if (!Platform.getInstance().isMW()) {
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
 
         searchPageObject.initSearchInput();
         searchPageObject.checkSearchFieldText();
+        }
     }
 
     @Test
+    @Step("Starting test testSearch")
+    @Description("Search by text")
+    @Feature(value = "Search")
+    @Severity(value = SeverityLevel.BLOCKER)
     public void testSearch() {
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
 
@@ -27,6 +39,10 @@ public class SearchTests extends CoreTestCase {
     }
 
     @Test
+    @Step("Starting test testCancelSearch")
+    @Description("Click cancel search button and check that it disappeared")
+    @Feature(value = "Search")
+    @Severity(value = SeverityLevel.MINOR)
     public void testCancelSearch() {
 
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
@@ -39,6 +55,10 @@ public class SearchTests extends CoreTestCase {
     }
 
     @Test
+    @Step("Starting test testAmountOfNotEmptySearch")
+    @Description("Search by text and make sure that result isn't empty")
+    @Feature(value = "Search")
+    @Severity(value = SeverityLevel.BLOCKER)
     public void testAmountOfNotEmptySearch() {
         String search = "Linkin Park Discography";
 
@@ -49,10 +69,14 @@ public class SearchTests extends CoreTestCase {
         searchPageObject.getAmountOfFoundArticles();
 
         int amountOfSearchResults = searchPageObject.getAmountOfFoundArticles();
-        assertTrue("Nothing was found", amountOfSearchResults > 0);
+        Assert.assertTrue("Nothing was found", amountOfSearchResults > 0);
     }
 
     @Test
+    @Step("Starting test testAmountOfEmptySearch")
+    @Description("Search by non valid text and make sure that result is empty")
+    @Feature(value = "Search")
+    @Severity(value = SeverityLevel.NORMAL)
     public void testAmountOfEmptySearch() {
         String search = "cvghjklkj";
 
@@ -66,6 +90,10 @@ public class SearchTests extends CoreTestCase {
     }
 
     @Test
+    @Step("Starting test testSearchByWord")
+    @Description("Search by word and make sure that results contain this word")
+    @Feature(value = "Search")
+    @Severity(value = SeverityLevel.NORMAL)
     public void testSearchByWord() {
         String search = "Java";
 
@@ -78,6 +106,10 @@ public class SearchTests extends CoreTestCase {
     }
 
     @Test
+    @Step("Starting test testCheckSearchResultByTitleAndDescription")
+    @Description("Search by word and check title and description of results")
+    @Feature(value = "Search")
+    @Severity(value = SeverityLevel.NORMAL)
     public void testCheckSearchResultByTitleAndDescription() {
         String search = "python",
                 firstTitle = "Python",

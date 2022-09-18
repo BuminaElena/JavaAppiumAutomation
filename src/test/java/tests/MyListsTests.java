@@ -1,11 +1,13 @@
 package tests;
 
+import io.qameta.allure.*;
 import lib.Platform;
 import lib.ui.*;
 import lib.ui.factories.ArticlePageObjectFactory;
 import lib.ui.factories.MyListsPageObjectFactory;
 import lib.ui.factories.NavigationUIFactory;
 import lib.ui.factories.SearchPageObjectFactory;
+import org.junit.Assert;
 import org.junit.Test;
 
 import lib.CoreTestCase;
@@ -17,6 +19,10 @@ public class MyListsTests extends CoreTestCase {
         password = "123qweQWE";
 
     @Test
+    @Step("Starting test testSaveFirstArticleToMyList")
+    @Description("Save an article to my lists and delete it")
+    @Features(value = {@Feature(value = "Lists"),@Feature(value = "Article"),@Feature(value = "Search")})
+    @Severity(value = SeverityLevel.CRITICAL)
     public void testSaveFirstArticleToMyList() throws InterruptedException {
 
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
@@ -28,7 +34,8 @@ public class MyListsTests extends CoreTestCase {
         ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
 
         articlePageObject.waitForTitleElement();
-        Thread.sleep(3000); //пауза, чтобы не ловить ошибку The previously found element ""Java" StaticText" is not present
+        if (Platform.getInstance().isIOS()) {
+        Thread.sleep(3000);} //пауза, чтобы не ловить ошибку The previously found element ""Java" StaticText" is not present
         String articleTitle = articlePageObject.getArticleTitle();
         String folderName = "Learning programming";
         if (Platform.getInstance().isAndroid()) {
@@ -49,7 +56,7 @@ public class MyListsTests extends CoreTestCase {
             }
 
             articlePageObject.waitForTitleElement();
-            assertEquals(
+            Assert.assertEquals(
                     "We are not on the same page after login",
                     articleTitle,
                     articlePageObject.getArticleTitle());
@@ -71,6 +78,10 @@ public class MyListsTests extends CoreTestCase {
     }
 
     @Test
+    @Step("Starting test testSaveTwoArticles")
+    @Description("Add two articles to saved and delete one")
+    @Features(value = {@Feature(value = "Lists"),@Feature(value = "Article"),@Feature(value = "Search")})
+    @Severity(value = SeverityLevel.NORMAL)
     public void testSaveTwoArticles() throws InterruptedException {
 
         String firstSearch = "java",
@@ -110,7 +121,7 @@ public class MyListsTests extends CoreTestCase {
             }
 
             articlePageObject.waitForTitleElement();
-            assertEquals(
+            Assert.assertEquals(
                     "We are not on the same page after login",
                     firstArticleTitle,
                     articlePageObject.getArticleTitle());
