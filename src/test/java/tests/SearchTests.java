@@ -18,10 +18,10 @@ public class SearchTests extends CoreTestCase {
     @Severity(value = SeverityLevel.NORMAL)
     public void testSearchFieldText() {
         if (!Platform.getInstance().isMW()) {
-        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
+            SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
 
-        searchPageObject.initSearchInput();
-        searchPageObject.checkSearchFieldText();
+            searchPageObject.initSearchInput();
+            searchPageObject.checkSearchFieldText();
         }
     }
 
@@ -110,13 +110,13 @@ public class SearchTests extends CoreTestCase {
     @Description("Search by word and check title and description of results")
     @Feature(value = "Search")
     @Severity(value = SeverityLevel.NORMAL)
-    public void testCheckSearchResultByTitleAndDescription() {
+    public void testCheckSearchResultByTitleAndDescription() throws InterruptedException {
         String search = "python",
                 firstTitle = "Python",
                 firstDescription = "Wikimedia disambiguation page",
-                secondTitle = "Python (programming language)",
+                secondTitle = "Python",
                 secondDescription = "General-purpose programming language",
-                thirdTitle = "Python syntax and semantics",
+                thirdTitle = "Python",
                 thirdDescription = "Syntax of the Python programming language";
         if (Platform.getInstance().isIOS()) {
             search = "тополь";
@@ -126,6 +126,13 @@ public class SearchTests extends CoreTestCase {
             secondDescription = "Российский ракетный комплекс";
             thirdTitle = "Тополь (ракетный комплекс)";
             thirdDescription = "Российский ракетный комплекс";
+        } else if (Platform.getInstance().isMW()) {
+            firstTitle = "Python";
+            firstDescription = "Topics referred to by the same term";
+            secondTitle = "Python";
+            secondDescription = "General-purpose programming language";
+            thirdTitle = "Python";
+            thirdDescription = "Family of snakes";
         }
 
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
